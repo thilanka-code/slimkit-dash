@@ -1,0 +1,33 @@
+{
+  "name": "slimkit-dash",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "start": "sirv public --single",
+    "update-svlib": "rimraf node_modules/sv-lib && npm install",
+    "svlib:latest": "npm run prod --prefix D:/Projects/Svelte_Component_Lib/ && npm run update-svlib && npm run dev"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "fa-svelte": "^3.1.0",
+    "node-sass": "^5.0.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.3.4",
+    "rollup-plugin-css-only": "^3.0.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-svelte": "^6.0.0",
+    "rollup-plugin-terser": "^7.0.0",
+    "sass": "^1.29.0",
+    "svelte": "^3.0.0",
+    "svelte-preprocess": "^4.6.1"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "bulma": "^0.9.1",
+    "page": "^1.11.6",
+    "sirv-cli": "^1.0.0",
+    "sv-lib": "file:D:/Projects/Svelte_Component_Lib/slimkit-ui-0.0.2.tgz"
+  }
+}

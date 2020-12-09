@@ -1,0 +1,18 @@
+
+For Sass processing:
+npm install -D svelte-preprocess
+npm i -D sass
+
+
+Peer dependencies for sv-lib
+-----------------------------
+npm install bulma
+npm install -D fa-svelte
+npm install @fortawesome/free-solid-svg-icons
+
+Building App for deployment
+---------------------------
+
+npm run build
+
+- copy content of public dir to web host

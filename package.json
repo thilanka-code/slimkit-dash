@@ -4,9 +4,10 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
+    "prod": "rimraf public/build && npm run build && cd server && node index.js",
     "start": "sirv public --single",
-    "update-svlib": "rimraf node_modules/sv-lib && npm install",
-    "svlib:latest": "npm run prod --prefix D:/Projects/Svelte_Component_Lib/ && npm run update-svlib && npm run dev"
+    "update-slimkit-ui": "rimraf node_modules/slimkit-ui && npm install",
+    "slimkit:latest": "npm run prod --prefix D:/Projects/Svelte_Component_Lib/ && npm run update-slimkit-ui && npm run dev"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^14.0.0",
@@ -28,6 +29,6 @@
     "bulma": "^0.9.1",
     "page": "^1.11.6",
     "sirv-cli": "^1.0.0",
-    "sv-lib": "file:D:/Projects/Svelte_Component_Lib/slimkit-ui-0.0.2.tgz"
+    "slimkit-ui": "file:D:/Projects/Svelte_Component_Lib/slimkit-ui-0.0.2.tgz"
   }
 }

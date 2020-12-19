@@ -21,9 +21,9 @@ a {
 	text-decoration: underline;
 } */
 
-a:visited {
+/* a:visited {
 	color: rgb(0,80,160);
-}
+} */
 
 label {
 	display: block;

@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "prod": "rimraf public/build && npm run build && cd server && node index.js",
+    "build:clean": "rimraf public/build && npm run build",
+    "devx": "set PORT=5000 && npm run build:clean && rollup -c -w",
+    "dev": "set PORT=5000 && rollup -c -w",
+    "prod": "npm run build:clean && cd server && node index.js",
     "start": "sirv public --single",
     "update-slimkit-ui": "rimraf node_modules/slimkit-ui && npm install",
     "slimkit:latest": "npm run prod --prefix D:/Projects/Svelte_Component_Lib/ && npm run update-slimkit-ui && npm run dev"
@@ -12,10 +14,15 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
+    "@rollup/plugin-replace": "^2.3.4",
+    "bulma": "^0.9.1",
+    "dotenv": "^8.2.0",
     "fa-svelte": "^3.1.0",
     "node-sass": "^5.0.0",
+    "postcss": "^8.2.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.3.4",
+    "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-css-only": "^3.0.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^6.0.0",
@@ -26,7 +33,6 @@
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "bulma": "^0.9.1",
     "page": "^1.11.6",
     "sirv-cli": "^1.0.0",
     "slimkit-ui": "file:D:/Projects/Svelte_Component_Lib/slimkit-ui-0.0.2.tgz"

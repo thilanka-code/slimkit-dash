@@ -4,7 +4,12 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from "rollup-plugin-css-only"; //Copy css files to public dir
-import { sveltePreprocess } from 'svelte-preprocess/dist/autoProcess';
+import replace from '@rollup/plugin-replace';
+import sveltePreprocess from 'svelte-preprocess';
+import { test } from "./rollup-plugin-my-test";
+import copy from 'rollup-plugin-copy';
+
+require('dotenv').config();
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -33,23 +38,50 @@ export default {
 	input: 'src/main.js',
 	output: {
 		sourcemap: true,
-		// format: 'iife',
 		format: 'es',
 		name: 'app',
-		// file: 'public/build/bundle.js'
 		dir: 'public/build/'
 	},
 	plugins: [
-		css({ output: "extra.css" }),
+		test(),
+		copy({
+			targets: [{
+				src: 'public/template.index.html',
+				dest: 'public',
+				rename: 'index.html',
+				transform: (contents) => {
+					let baseRef = process.env.NODE_ENV === 'production' ? process.env.WEB_ROOT : '/';
+					return contents.toString().replace('__BASE_HREF__', baseRef);
+				}
+			}],
+			hook: 'buildStart'
+		}),
+		replace({
+			delimiters: ['__', '__'],
+			BASE_PATH: production ? process.env.BASE_URL : ''
+		}),
+		css({ output: "extra.css" }), // External (node_modules) css parser
 		svelte({
-			preprocess: sveltePreprocess(), //Include imported css
+			preprocess: sveltePreprocess({
+				defaults: {
+					style: 'scss',
+				},
+				scss: {
+					prependData: 
+					`@import 'src/styles/variables.scss';`, //Customize bulma colors
+					// includePaths:[resolve('node_modules/bulma/'), 'src'],
+					// outFile: 'public/build/scss.css'
+				}
+			}), 
+			
 			// enable run-time checks when not in production
 			dev: !production,
 			// we'll extract any component CSS out into
 			// a separate file - better for performance
 			css: css => {
 				css.write('bundle.css');
-			}
+			},
+			// preprocess: 
 		}),
 
 		// If you have external dependencies installed from

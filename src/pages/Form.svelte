@@ -1,8 +1,11 @@
 <script>
-    import { TypeAhead } from "sv-lib";
+    import { TypeAhead } from "slimkit-ui";
+
     // import { sidebarVisible } from "../tores/sidebar-store";
+    // import('slimkit-ui/TypeAhead').then(module => {const cmp = module.default})
 
     export let onToggle;
+    export let enableSb;
 
     let _items = [
 		{ text: "Paaaan1", value: "p1" },
@@ -26,6 +29,26 @@
         // sidebarVisible.update(b => !b);
         // window.toggleSidebar();
         onToggle();
+    }
+    
+    function enableSidebar() {
+        enableSb();
+    }
+
+    const link = (node, bar)=> {
+
+        console.log('wooooooooooot: '+node.pathname);
+        node.pathname = '/fe' + node.pathname;
+        console.log(node);
+        console.log(node.pathname);
+        
+        return {
+            destroy() {
+                // the node has been removed from the DOM
+                console.log('goone: '+bar);
+                
+			}
+		};
 	}
 
 </script>
@@ -37,8 +60,8 @@
 </style>
 
 <div class="column" id="content">
-    <!-- <a href="/about">About!!!!!!</a> -->
-    <!-- <button class="button" on:click={toggle}>Toggle</button> -->
+    <a href="/about" use:link={"val"}>About!!!!!!</a>
+    <button class="button is-primary is-active" on:click={toggle}>Toggle</button>
     <div class="top-down-form">
         <div class="field">
             <label class="label" for="name">Name</label>

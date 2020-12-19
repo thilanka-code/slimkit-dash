@@ -1,43 +1,54 @@
 <script>
-	import { SideBar } from "sv-lib";
+	import { SideBar } from "slimkit-ui";
+	
 	import Icon from "fa-svelte";
 	import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
-	import "bulma/css/bulma.min.css";
 	import router from "page";
-	import About from "./pages/About.svelte";
-	import Form from './pages/Form.svelte';
 	import { onMount } from "svelte";
 	import { menu } from "./sidebar-data.js";
-	// import { sidebarClosed } from "./stores/sidebar-store";
-
+	
 	let mySideBar;
 	let page;
 	let pageParams;
 	let isSideBarCollapsed = true;
 	let activeIndex =0;
+	const BASE_PATH = "__BASE_PATH__" //This will be replaced by rollup replace plugin
 	let currentPath = "/";
 
-	// $: {
 		
-	// }
-
 	const routeHandler = (ctx, next) =>{
 		// console.log(ctx);
 		console.log('Navigatng to : '+ctx.page.current);
 		currentPath = ctx.page.current
 		pageParams = null;
+		console.log(mySideBar);
 		next();
 	}
-
-
+		
+		
 	onMount(()=>{
+		router.base(BASE_PATH);
 
-		router('*', routeHandler)
+		router('*', routeHandler);
+
 		router("/", () => {
-			page = Form;
+			
+			import('./pages/Form.svelte').then(module => {page = module.default});
+			console.log('page is');
+			console.log(page);
+			
 			pageParams = {onToggle: mySideBar.toggleShow}
+					
 		});
-		router("/about", () => (page = About));
+
+		router("/about", () => {
+			
+			import('./pages/About.svelte').then(module => {page = module.default});
+			console.log('page is');
+			console.log(page);
+			
+			pageParams = {};
+		});
 
 		router.start();
 		console.log('router started');
@@ -60,15 +71,14 @@
 		activeIndex = activeIndex >= Object.keys(menu).length ? 0:activeIndex;
 	}
 
-	// setInterval(()=>setMenuIndex(),1000)
-
 	
 
 </script>
 
-<style lang="scss">
+<style lang="scss" global>
+	@import "../node_modules/bulma/bulma.sass";
+
 	nav {
-		// background-color: chocolate;
 		.navbar-brand {
 			.navbar-item {
 				img {
@@ -97,48 +107,22 @@
 		margin: 10px 30px;
 	}
 
-	// SideBar {
-	// 	margin
-	// }
-
-	//  @import "bulma/sass/utilities/_all.sass";
-	//  @import "bulma/sass/base/_all.sass";
-	//  @import "bulma/sass/components/menu.sass";
-	//  @import "bulma/bulma.sass";
-	/* main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	} */
 </style>
 
 <main>
+
 	<!-- Nav Bar -->
-	<nav class="navbar" role="navigation" aria-label="main navigation">
+	<nav class="navbar testx is-primaryx" role="navigation" aria-label="main navigation">
 		<div class="navbar-brand">
 			<span class="navbar-item">
 				<img
-				src="/framework/img/zircon.png"
+				src="framework/img/zircon.png"
 				alt="branding"
 				width="64"
 				height="100" />
 			</span>
 			{#if isSideBarCollapsed}
-		<a role="button" class="navbar-burger is-activex" aria-label="menu" aria-expanded="false" on:click={mySideBar.toggleShow}>
+		<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" on:click={mySideBar.toggleShow}>
 			<span aria-hidden="true"></span>
 			<span aria-hidden="true"></span>
 			<span aria-hidden="true"></span>
@@ -150,7 +134,7 @@
 
 
 	<!-- Breadcrum bar -->
-	<nav class="breadcrumb is-right" aria-label="breadcrumbs">
+	<nav class="breadcrumb is-primary is-right" role="navigation" aria-label="breadcrumbs">
 		<ul>
 		<li><a href="#" on:click={setMenuIndex}>Current: {currentPath}</a></li>
 		  <li><a href="#">Documentation</a></li>
@@ -166,7 +150,7 @@
 
 		<!-- Sidebar -->
 		<SideBar {menu} cssClass="column" bind:this={mySideBar} on:collapsed={sidebarCollapsed} 
-	{activeIndex} on:click={activeLink} {currentPath}/>
+		{activeIndex} on:click={activeLink} {currentPath}/>
 	
 
 			 <!-- SPA View -->

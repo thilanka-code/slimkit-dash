@@ -1,6 +1,5 @@
 import { writable } from "svelte/store";
 
-export const validity = writable({});
 export const formValidity = writable({});
 
 /**

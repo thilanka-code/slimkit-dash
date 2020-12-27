@@ -43,7 +43,7 @@ export default {
 		dir: 'public/build/'
 	},
 	plugins: [
-		test(),
+		// test(),
 		copy({
 			targets: [{
 				src: 'public/template.index.html',

@@ -7,6 +7,8 @@
 	import { onMount } from "svelte";
 	import { menu } from "./sidebar-data.js";
 	
+	// import Form from './pages/Form.svelte';
+
 	let mySideBar;
 	let page;
 	let pageParams;
@@ -34,6 +36,7 @@
 		router("/", () => {
 			
 			import('./pages/Form.svelte').then(module => {page = module.default});
+			// page = Form;
 			console.log('page is');
 			console.log(page);
 			

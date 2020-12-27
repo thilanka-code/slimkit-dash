@@ -90,7 +90,7 @@ export function validation(node, formField) {
     return {
         destroy() {
             //Remove event listener
-            node.removeEventListener(textFieldListener);
+            node.removeEventListener("input", textFieldListener);
         }
     };
 }

@@ -15,7 +15,7 @@
             validationMessage: "Value must be between 3 and 5",
         },
         username: { value: "th", validation: { maxLength: 2 } },
-        email: { value: "me@gmail.com", validation: {minLength: 15, 'email':''} },
+        email: { value: "me@gmail.com", validation: {minLength: 1, 'email':''} },
     };
 
     const sampleForm = new Form("form-sample", formData);
@@ -69,6 +69,9 @@
         console.log("****************");
         console.log(sampleForm);
         console.log(sampleForm.isValid());
+        console.log(sampleForm.title.value);
+        console.log(sampleForm.username.value);
+        console.log(sampleForm.email.value);
     };
 </script>
 
@@ -128,7 +131,7 @@
                         <div class="control has-icons-left has-icons-right">
                             <input
                             use:validation={sampleForm.email}
-                            bind:value={sampleForm.title.email}
+                            bind:value={sampleForm.email.value}
                             class="input is-danger"
                             type="email"
                             placeholder="Email input" />

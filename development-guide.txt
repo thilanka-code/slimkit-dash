@@ -1,0 +1,4 @@
+Fork syncing from slimkit parent project
+========================================
+
+git pull upstream master

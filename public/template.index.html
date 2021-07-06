@@ -9,14 +9,34 @@
 	<title>Svelte app</title>
 
 
+	{% if build == 'native' %}
+	{styles}
+	{% else %}
 	<link rel='icon' type='image/png' href='favicon.png'>
 	<link rel='stylesheet' href='global.css'>
 	<link rel='stylesheet' href='build/bundle.css'>
-	<!-- <link rel="stylesheet" href="/build/extra.css" /> -->
-
 	<script defer type="module" src='build/main.js'></script>
+	{% endif %}
+	<!-- <link rel="stylesheet" href="/build/extra.css" /> -->
+	
 </head>
 
 <body>
+	{% if build == 'native' %}
+	{scripts}
+	{% endif %}
 </body>
+<script>
+// 	if ('serviceWorker' in navigator) {
+//   window.addEventListener('load', function() {
+//     navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+//       // Registration was successful
+//       console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//     }, function(err) {
+//       // registration failed :(
+//       console.log('ServiceWorker registration failed: ', err);
+//     });
+//   });
+// }
+</script>
 </html>

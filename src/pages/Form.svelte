@@ -1,5 +1,5 @@
 <script>
-    import { TypeAhead } from "slimkit-ui";
+    import { TypeAhead } from "@slimkit-ui/svelte-elements";
     import { validation, Form, formValidity } from "../validator.js";
     import { faUser, faCheck } from "@fortawesome/free-solid-svg-icons";
     import Icon from "fa-svelte";

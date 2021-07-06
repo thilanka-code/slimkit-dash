@@ -7,11 +7,31 @@ import css from "rollup-plugin-css-only"; //Copy css files to public dir
 import replace from '@rollup/plugin-replace';
 import sveltePreprocess from 'svelte-preprocess';
 import { test } from "./rollup-plugin-my-test";
+import { updateServiceWorker } from "./rollup-plugin-sw";
 import copy from 'rollup-plugin-copy';
+import { nunjucksHtmlAndGnericFiles } from "./rollup-plugin-nunjucks.js";
+import image from '@rollup/plugin-image'; //encodes images to text (33% larger than normal!)
 
 require('dotenv').config();
 
 const production = !process.env.ROLLUP_WATCH;
+const buildType = process.env.BUILD_TYPE
+
+console.log("Initiating build for : "+buildType);
+
+//Determine the type of Rollup output config on buildType
+let rollupOutput = buildType == 'web' ? [{
+	// sourcemap: !production,
+	sourcemap: true,
+	format: 'es',
+	name: 'app',
+	dir: 'public/build/'
+}] : [{
+	name: 'app',
+	format: 'iife',
+	file: 'public/build/main.js',
+	inlineDynamicImports: true
+}]
 
 function serve() {
 	let server;
@@ -36,14 +56,10 @@ function serve() {
 
 export default {
 	input: 'src/main.js',
-	output: {
-		sourcemap: true,
-		format: 'es',
-		name: 'app',
-		dir: 'public/build/'
-	},
+	output: rollupOutput,
 	plugins: [
 		// test(),
+		image(), //embed images
 		copy({
 			targets: [{
 				src: 'public/template.index.html',
@@ -58,21 +74,38 @@ export default {
 		}),
 		replace({
 			delimiters: ['__', '__'],
-			BASE_PATH: production ? process.env.BASE_URL : ''
+			ENV: JSON.stringify({
+				API_BASE: production ? process.env.API_BASE : process.env.DEV_API_BASE
+			})
 		}),
 		css({ output: "extra.css" }), // External (node_modules) css parser
+		nunjucksHtmlAndGnericFiles({ //Inject css and js based on the build type
+			input: './public/index.html',
+			vars: { build: buildType },
+			hook: 'buildEnd'
+		}),
 		svelte({
-			preprocess: sveltePreprocess({
-				defaults: {
-					style: 'scss',
-				},
-				scss: {
-					prependData: 
-					`@import 'src/styles/variables.scss';`, //Customize bulma colors
-					// includePaths:[resolve('node_modules/bulma/'), 'src'],
-					// outFile: 'public/build/scss.css'
-				}
-			}), 
+			//Disable warnings for fast builds.
+			onwarn: (warning, handler) => {
+				const { code, frame } = warning;
+				if (code === "css-unused-selector")
+					return;
+		
+				handler(warning);
+			},
+			preprocess: [
+				sveltePreprocess({
+					defaults: {
+						style: 'scss',
+					},
+					scss: {
+						prependData: 
+						`@import 'src/styles/variables.scss';`, //Customize bulma colors
+					},
+					postcss: production // To enable purging unused css
+				}),
+
+			], 
 			
 			// enable run-time checks when not in production
 			dev: !production,
@@ -94,6 +127,20 @@ export default {
 			dedupe: ['svelte']
 		}),
 		commonjs(),
+
+		updateServiceWorker(),
+
+		copy({
+			targets: [{
+				src: 'service-worker.js',
+				dest: 'public',
+				transform: (contents) => {
+					return contents.toString().replace('__MAIN_CHUNK__', global.mainFileName);
+				}
+			}],
+			hook: 'renderChunk',
+			verbose: true
+		}),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated

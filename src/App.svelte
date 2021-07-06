@@ -1,72 +1,41 @@
 <script>
-	import { SideBar } from "slimkit-ui";
+	import { SideBar } from "@slimkit-ui/svelte-elements";
 	
 	import Icon from "fa-svelte";
 	import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 	import router from "page";
 	import { onMount } from "svelte";
 	import { menu } from "./sidebar-data.js";
+	import { currentPage, pageParams } from "./stores/page.store";
+	import { routeData } from "./route-data";
+	import { init, navigate } from "./utils/navigator.js";
+	import zirconImg  from "../public/framework/img/zircon.png";
 	
 	// import Form from './pages/Form.svelte';
 
 	let mySideBar;
 	let page;
-	let pageParams;
 	let isSideBarCollapsed = true;
 	let activeIndex =0;
-	const BASE_PATH = "__BASE_PATH__" //This will be replaced by rollup replace plugin
 	let currentPath = "/";
 
-		
-	const routeHandler = (ctx, next) =>{
-		// console.log(ctx);
-		console.log('Navigatng to : '+ctx.page.current);
-		currentPath = ctx.page.current
-		pageParams = null;
-		console.log(mySideBar);
-		next();
-	}
-		
-		
-	onMount(()=>{
-		router.base(BASE_PATH);
-
-		router('*', routeHandler);
-
-		router("/", () => {
 			
-			import('./pages/Form.svelte').then(module => {page = module.default});
-			// page = Form;
-			console.log('page is');
-			console.log(page);
-			
-			pageParams = {onToggle: mySideBar.toggleShow}
-					
-		});
-
-		router("/about", () => {
-			
-			import('./pages/About.svelte').then(module => {page = module.default});
-			console.log('page is');
-			console.log(page);
-			
-			pageParams = {};
-		});
-
-		router.start();
-		console.log('router started');
-		
+	onMount(async ()=>{
+		let routingData = await init({...routeData})
+		pageParams.set({...routingData.params})
+		currentPage.set(routingData.module)
 	})
 
 	function sidebarCollapsed(evt) {
 		isSideBarCollapsed = evt.detail;
 	}
 
-	function activeLink(event) {
-		console.log('active link= '+event.detail);
-		console.log('parent current path: '+currentPath);
-		
-		router(event.detail);
+	async function activeLink(event) {
+		console.log(event.detail);
+		let {module, params} = await navigate(event.detail)
+		console.log({module, params});
+		pageParams.set({...params})
+		currentPage.set(module)
 	}
 
 	function setMenuIndex() {
@@ -78,8 +47,7 @@
 
 </script>
 
-<style lang="scss" global>
-	@import "../node_modules/bulma/bulma.sass";
+<style lang="scss">
 
 	nav {
 		.navbar-brand {
@@ -118,8 +86,9 @@
 	<nav class="navbar testx is-primaryx" role="navigation" aria-label="main navigation">
 		<div class="navbar-brand">
 			<span class="navbar-item">
+				<!-- src="public/framework/img/zircon.png" -->
 				<img
-				src="framework/img/zircon.png"
+				src={zirconImg}
 				alt="branding"
 				width="64"
 				height="100" />
@@ -147,18 +116,15 @@
 	  </nav>
 	<!-- </div> -->
 
-
-
 	<div class="columns is-marginlessee">
 
 		<!-- Sidebar -->
 		<SideBar {menu} cssClass="column" bind:this={mySideBar} on:collapsed={sidebarCollapsed} 
 		{activeIndex} on:click={activeLink} {currentPath}/>
 	
-
 			 <!-- SPA View -->
-		<div class="columns spa-view">
-		<svelte:component this={page} {...pageParams}/>
+		<div class="column spa-view">
+			<svelte:component this={$currentPage} {...pageParams}/>
 		</div>
 
 	</div>

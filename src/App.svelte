@@ -3,12 +3,11 @@
 	
 	import Icon from "fa-svelte";
 	import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
-	import router from "page";
 	import { onMount } from "svelte";
 	import { menu } from "./sidebar-data.js";
 	import { currentPage, pageParams } from "./stores/page.store";
 	import { routeData } from "./route-data";
-	import { init, navigate } from "./utils/navigator.js";
+	import { init, navigate } from "@slimkit-ui/router";
 	import zirconImg  from "../public/framework/img/zircon.png";
 	
 	// import Form from './pages/Form.svelte';

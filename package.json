@@ -39,7 +39,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@slimkit-ui/router": "^1.0.0",
     "@slimkit-ui/svelte-elements": "0.0.8",
-    "@slimkit-ui/svelte-forms": "^1.0.0",
+    "@slimkit-ui/svelte-forms": "^1.1",
     "sirv-cli": "^1.0.0"
   }
 }

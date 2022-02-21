@@ -76,14 +76,23 @@
 </script>
 
 <style>
-    .top-down-form {
+    /* .top-down-form {
         max-width: 300px;
+    } */
+    .A {
+        background-color: aquamarine;
+        height: 200px;
     }
 </style>
 
-<div class="column" id="content">
+<div class="columns is-multiline" id="content">
     <!-- <a href="/about" use:link={"val"}>About!!!!!!</a> -->
-
+    <div class="column A is-full">
+        <h1 class="title">New FIX Order</h1>
+    </div>
+    <div class="column A">
+        PART B
+    </div>
     <form on:submit|preventDefault={submitHandler} autocomplete="off">
         <div class="top-down-form">
             <div class="field">

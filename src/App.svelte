@@ -75,6 +75,7 @@
 
 	.spa-view {
 		margin: 10px 30px;
+		// flex-grow: 1; //Grow content as much horizontally
 	}
 
 </style>
@@ -115,7 +116,7 @@
 	  </nav>
 	<!-- </div> -->
 
-	<div class="columns is-marginlessee">
+	<div class="columns">
 
 		<!-- Sidebar -->
 		<SideBar {menu} cssClass="column" bind:this={mySideBar} on:collapsed={sidebarCollapsed} 

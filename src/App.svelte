@@ -124,7 +124,7 @@
 	
 			 <!-- SPA View -->
 		<div class="column spa-view">
-			<svelte:component this={$currentPage} {...pageParams}/>
+			<svelte:component this={$currentPage} {...$pageParams}/>
 		</div>
 
 	</div>

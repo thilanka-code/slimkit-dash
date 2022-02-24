@@ -13,6 +13,7 @@ import { nunjucksHtmlAndGnericFiles } from "./rollup-plugin-nunjucks.js";
 import image from '@rollup/plugin-image'; //encodes images to text (33% larger than normal!)
 
 require('dotenv').config();
+const path = require('path')
 
 const production = !process.env.ROLLUP_WATCH;
 const buildType = process.env.BUILD_TYPE
@@ -29,7 +30,7 @@ let rollupOutput = buildType == 'web' ? [{
 }] : [{
 	name: 'app',
 	format: 'iife',
-	file: 'public/build/main.js',
+	file: 'public/build/iife.js',
 	inlineDynamicImports: true
 }]
 
@@ -84,6 +85,13 @@ export default {
 			vars: { build: buildType },
 			hook: 'buildEnd'
 		}),
+		{//Custom plugin to watch template.index.html and .env file updates: TODO: ADD THIS TO SLIMKIT DASH!!!???
+			name: 'watch-external',
+			buildStart(){
+				this.addWatchFile(path.resolve(__dirname, 'public/template.index.html'))
+				this.addWatchFile(path.resolve(__dirname, '.env'))
+			}
+		},
 		svelte({
 			//Disable warnings for fast builds.
 			onwarn: (warning, handler) => {

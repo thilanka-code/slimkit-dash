@@ -18,6 +18,11 @@
 	let activeIndex =0;
 	let currentPath = "/";
 
+	$: {
+		//To trigger change when navigation occurs from otherthan the SideBar
+		let x = $currentPage 
+		currentPath = window.location.pathname;
+	}
 			
 	onMount(async ()=>{
 		let routingData = await init({...routeData})
